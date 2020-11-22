@@ -1,0 +1,9 @@
+{
+  "routes": [
+    {
+      "name": "Google Redirect",
+      "from": 1234,
+      "to": "216.58.208.46:80"
+    }
+  ]
+}
