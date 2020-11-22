@@ -1,25 +1,24 @@
-# workflow name
-name: Generate release
+# .github/workflows/release.yaml
 
-# on events
-on:
+on: 
   release:
-    types: 
-        - created
+    types: [created]
 
-# workflow tasks
 jobs:
-  generate:
-    name: Generate cross-platform builds
+  releases-matrix:
+    name: Release Go Binary
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        goarch: [amd64]
     steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v2
-      - name: Generate build files
-        uses: thatisuday/go-cross-build@v1
-        with:
-            platforms: 'linux/amd64, darwin/amd64, windows/amd64'
-            package: ''
-            name: 'go-tcp-proxy'
-            compress: 'true'
-            dest: 'dist'
+    - uses: actions/checkout@v2
+    - uses: wangyoucao577/go-release-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        goos: ${{ matrix.goos }}
+        goarch: ${{ matrix.goarch }}
+        project_path: "./"
+        binary_name: "go-tcp-proxy"
+        extra_files: LICENSE README.md
